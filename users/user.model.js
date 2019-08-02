@@ -6,7 +6,11 @@ const schema = new Schema({
     hash: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    createdDate: { type: Date, default: Date.now }
+    createdDate: { type: Date, default: Date.now },
+    // TO Refactor: All progress by category hardcoded as attribute of user
+    cat1doneQuestionIds: { type: Array },
+    cat2doneQuestionIds: { type: Array },
+    cat3doneQuestionIds: { type: Array },
 });
 
 schema.set('toJSON', { virtuals: true });
