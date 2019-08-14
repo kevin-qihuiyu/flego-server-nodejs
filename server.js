@@ -31,7 +31,7 @@ app.set('view engine', 'pug');
 // const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 3000;
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 8000;
+  port = 3000;
 }
 const server = app.listen(port, function () {
     console.log('Server listening on port ' + port);

@@ -4,6 +4,11 @@ const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
 const User = db.User;
 
+// For google login
+const {OAuth2Client} = require('google-auth-library');
+const CLIENT_ID = "";
+const googleAuthClient = new OAuth2Client(CLIENT_ID);
+
 module.exports = {
     authenticate,
     getAll,
@@ -12,6 +17,32 @@ module.exports = {
     update,
     delete: _delete
 };
+
+async function loginWithGoogleIdToken() {
+    const ticket = await googleAuthClient.verifyIdToken({
+        idToken: token,
+        audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+    });
+    const payload = ticket.getPayload();
+    const userid = payload['sub'];
+
+    // Try login with userid/'password'
+    authenticate(userid, 'password')
+        .then(user => {
+            if (user) {
+                // User already exist. login successful
+                res.json(user);
+            } else {
+                // User does not exist. Create a user with userid/'password', then login
+                await create({ 
+                    username: userid,
+                    password: 'password'
+                });
+                authenticate(userid, 'password').then(user => res.json(user));
+            }
+        })
+        .catch(err => next(err));
+}
 
 async function authenticate({ username, password }) {
     const user = await User.findOne({ username });
