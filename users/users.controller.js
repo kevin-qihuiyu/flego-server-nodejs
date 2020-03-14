@@ -28,8 +28,9 @@ function register(req, res, next) {
 function getAll(req, res, next) {
     userService.getAll()
         .then(users => {
+            // Don't return anything for security reason now
             // res.json(users);
-            res.render('user_list', { title: 'User List', user_list: users });
+            // res.render('user_list', { title: 'User List', user_list: users });
         })
         .catch(err => next(err));
 }
